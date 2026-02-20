@@ -1,4 +1,5 @@
 {
+  "include": ["src/**/*", "tsconfig-paths-bootstrap.js", "drizzle.config.ts"],
   "compilerOptions": {
     "module": "nodenext",
     "moduleResolution": "nodenext",
@@ -14,9 +15,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "paths": {
-      "@/*": ["src/*"]
-    },
+    "paths": { "@/*": ["src/*"] },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,

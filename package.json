@@ -9,9 +9,9 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:dev": "nest start --watch",
+    "start:dev": "NODE_OPTIONS='--require ./tsconfig-paths-bootstrap.js' nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node -r ./tsconfig-paths-bootstrap.js dist/src/main.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -22,7 +22,13 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:check": "drizzle-kit check"
+    "db:check": "drizzle-kit check",
+    "generate:module": "node scripts/generate-module.js",
+    "docker:up": "./scripts/docker-run.sh up",
+    "docker:db": "./scripts/docker-run.sh db",
+    "docker:down": "./scripts/docker-run.sh down",
+    "docker:logs": "./scripts/docker-run.sh logs",
+    "docker:build": "./scripts/docker-run.sh build"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",

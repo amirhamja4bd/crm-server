@@ -22,6 +22,20 @@
       "when": 1761997943511,
       "tag": "0002_bumpy_risque",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771629427558,
+      "tag": "0003_married_hobgoblin",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1771630353334,
+      "tag": "0004_superb_moonstone",
+      "breakpoints": true
     }
   ]
 }
