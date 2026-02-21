@@ -7,7 +7,13 @@ import {
 import { PaginationDto } from '@/shared/pagination/pagination.dto';
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CreateUserDto, LoginDto, RefreshTokenDto, UpdateUserDto } from '../dtos';
+import {
+  CreateOrganizationUserDto,
+  CreateUserDto,
+  LoginDto,
+  RefreshTokenDto,
+  UpdateUserDto,
+} from '../dtos';
 import { UsersService } from '../services/users.service';
 
 @ApiTags('users')
@@ -19,7 +25,16 @@ export class UsersController {
   @Public()
   @Post()
   async create(@Body() payload: CreateUserDto) {
-    return await this.usersService.create(payload);
+    return await this.usersService.createWithTransaction(payload);
+  }
+
+  @RequirePermissions({ resource: PermissionResource.USERS, action: PermissionAction.CREATE })
+  @Post('organization/user')
+  async createOrganizationUser(
+    @CurrentUser() user: UserRequestType,
+    @Body() payload: CreateOrganizationUserDto,
+  ) {
+    return await this.usersService.createOrganizationUser(user.organizationId, payload);
   }
 
   @Public()

@@ -14,7 +14,6 @@ export const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('2h'),
 
   // REFRESH TOKEN
-  REFRESH_SECRET: z.string().min(32),
   REFRESH_EXPIRES_IN: z.string().default('1d'),
 
   // PDF

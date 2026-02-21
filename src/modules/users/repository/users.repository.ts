@@ -3,8 +3,8 @@ import { role_permissions } from '@/modules/role_permissions/schemas/schema';
 import { roles } from '@/modules/roles/schemas/schema';
 import { user_roles } from '@/modules/user_roles/schemas/schema';
 import { BaseRepository } from '@/shared/base-classes/base.repository';
-import { Injectable } from '@nestjs/common';
-import { eq, or, SQL } from 'drizzle-orm';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { and, count, eq, ne, or, SQL } from 'drizzle-orm';
 import { CreateUserDto, UpdateUserDto } from '../dtos';
 import * as schema from '../schemas/schema';
 
@@ -16,7 +16,7 @@ export class UsersRepository extends BaseRepository<
   UpdateUserDto
 > {
   constructor() {
-    super(schema, schema.users, ['email', 'name'], ['email']);
+    super(schema, schema.users, ['email', 'name'], []);
   }
 
   async findByEmailOrUsername(identifier: string) {
@@ -74,5 +74,69 @@ export class UsersRepository extends BaseRepository<
       permissions: userPermissions,
       isSuperAdmin: hasSuperAdminRole,
     };
+  }
+
+  async countUsersInOrganization(organizationId: string): Promise<number> {
+    const result = await this.db
+      .select({ count: count() })
+      .from(schema.users)
+      .where(
+        and(eq(schema.users.organizationId, organizationId), eq(schema.users.isDeleted, false)),
+      );
+    return result[0]?.count || 0;
+  }
+
+  async checkUniqueInOrganization(
+    organizationId: string,
+    email: string,
+    username: string,
+    mobile: string,
+    excludeUserId?: string,
+  ) {
+    const baseConditions: SQL[] = [
+      eq(this.table.organizationId, organizationId),
+      eq(this.table.isDeleted, false),
+    ];
+
+    const orCondition = or(
+      eq(this.table.email, email),
+      eq(this.table.username, username),
+      eq(this.table.mobile, mobile),
+    ) as SQL;
+
+    if (excludeUserId) {
+      baseConditions.push(ne(this.table.id, excludeUserId));
+    }
+
+    const whereCondition = and(...baseConditions, orCondition);
+
+    const existing = await this.db
+      .select()
+      .from(this.table)
+      .where(whereCondition)
+      .limit(1);
+
+    if (existing.length > 0) {
+      const user = existing[0] as any;
+      const conflicts: string[] = [];
+      if (user.email === email) conflicts.push('email');
+      if (user.username === username) conflicts.push('username');
+      if (user.mobile === mobile) conflicts.push('mobile');
+      throw new BadRequestException(
+        `User with this ${conflicts.join(', ')} already exists in organization`,
+      );
+    }
+  }
+
+  async create(createDto: any) {
+    if (createDto.organizationId) {
+      await this.checkUniqueInOrganization(
+        createDto.organizationId,
+        createDto.email,
+        createDto.username,
+        createDto.mobile,
+      );
+    }
+    return super.create(createDto);
   }
 }

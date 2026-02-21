@@ -9,5 +9,6 @@ import { User_rolesService } from './services/user_roles.service';
   imports: [DatabaseModule, LibModule],
   controllers: [User_rolesController],
   providers: [User_rolesService, User_rolesRepository],
+  exports: [User_rolesService],
 })
 export class User_rolesModule {}

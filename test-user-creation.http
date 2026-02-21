@@ -1,0 +1,92 @@
+### Test 1: Create first user in Organization A (Should create user + Admin role + user_role)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "User One",
+  "username": "user1",
+  "email": "user1@example.com",
+  "mobile": "+1234567890",
+  "password": "password123",
+  "organizationName": "Organization A"
+}
+
+# Expected Response:
+# - user with isOrganizationOwner: true
+# - role with name: "Admin"
+# - userRole linking user to Admin role
+
+### Test 2: Create second user in Organization A (Should NOT create new Admin role)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "User Two",
+  "username": "user2",
+  "email": "user2@example.com",
+  "mobile": "+1234567891",
+  "password": "password123",
+  "organizationName": "Organization A"
+}
+
+# Expected Response:
+# - user with isOrganizationOwner: false
+# - NO new role created
+# - NO userRole created (unless roleIds provided)
+
+### Test 3: Create user in Organization B with SAME credentials as User One (should succeed)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "User One",
+  "username": "user1",
+  "email": "user1@example.com",
+  "mobile": "+1234567890",
+  "password": "password123",
+  "organizationName": "Organization B"
+}
+
+### Test 4: Try to create duplicate user in Organization A (should fail)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Duplicate User",
+  "username": "user1",
+  "email": "different@example.com",
+  "mobile": "+9999999999",
+  "password": "password123",
+  "organizationName": "Organization A"
+}
+
+### Test 5: Create user in Organization C with different credentials
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "User Three",
+  "username": "user3",
+  "email": "user3@example.com",
+  "mobile": "+1234567892",
+  "password": "password123",
+  "organizationName": "Organization C"
+}
+
+### Test 6: Transaction Rollback Test - Invalid data (should rollback everything)
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+  "name": "Invalid User",
+  "username": "invaliduser",
+  "email": "invalid@example.com",
+  "mobile": "+1234567893",
+  "password": "password123"
+}
+
+# Expected Response:
+# - Error: "Either organizationId or organizationName is required"
+# - NO user created
+# - NO role created
+# - Database remains consistent

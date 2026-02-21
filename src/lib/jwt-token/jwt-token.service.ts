@@ -53,11 +53,11 @@ export class JwtTokenService {
    * @returns The generated refresh token
    */
   generateRefreshToken(userId: string): string {
-    const secret = this.configService.get('REFRESH_SECRET', { infer: true });
+    const secret = this.configService.get('JWT_SECRET', { infer: true });
     const expiresIn = this.configService.get('REFRESH_EXPIRES_IN', { infer: true });
 
     if (!secret) {
-      throw new Error('REFRESH_SECRET is not configured');
+      throw new Error('JWT_SECRET is not configured');
     }
 
     const payload: RefreshTokenPayload = { id: userId };
@@ -74,7 +74,7 @@ export class JwtTokenService {
    */
   async verifyRefreshToken(token: string) {
     try {
-      const secret = this.configService.get('REFRESH_SECRET', { infer: true });
+      const secret = this.configService.get('JWT_SECRET', { infer: true });
       const payload = await this.jwtService.verifyAsync<RefreshTokenPayload>(token, { secret });
       return payload;
     } catch (error) {

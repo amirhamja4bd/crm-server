@@ -12,7 +12,7 @@ export class OrganizationsRepository extends BaseRepository<
   UpdateOrganizationDto
 > {
   constructor() {
-    super(schema, schema.organizations, [], []);
+    super(schema, schema.organizations, ['name', 'email'], ['email', 'phone', 'slug', 'domain']);
   }
 
   async findByName(name: string) {

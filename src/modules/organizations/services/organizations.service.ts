@@ -37,12 +37,13 @@ export class OrganizationsService extends BaseService<
     if (existing) return existing;
     const subscriptionPlanId = await this.subscription_plansService.getOrCreateTrialPlan();
     const baseSlug = slugify(organizationName) || 'org';
+    const timestamp = Date.now();
     const suffix = randomBytes(4).toString('hex');
-    const slug = `${baseSlug}-${suffix}`;
+    const slug = `${baseSlug}-${timestamp}-${suffix}`;
     const createDto: CreateOrganizationDto = {
       name: organizationName,
       email: `${slug}@org.trial`,
-      phone: `+1${randomBytes(5).toString('hex')}`,
+      phone: `+${timestamp}${randomBytes(3).toString('hex')}`,
       slug,
       domain: `${slug}.trial`,
       subscriptionPlanId,
