@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CoreModule } from './core.module';
 import { DatabaseModule } from './database/database.module';
+import { AuthenticationGuard } from './guards/authentication.guard';
+import { AuthorizationGuard } from './guards/authorization.guard';
+import { PermissionsGuard } from './guards/permissions.guard';
 import { LibModule } from './lib/lib.module';
 import { Feature_flagsModule } from './modules/feature_flags/feature_flags.module';
 import { ModulesModule } from './modules/modules/modules.module';
@@ -34,6 +38,20 @@ import { User_rolesModule } from './modules/user_roles/user_roles.module';
     User_rolesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthenticationGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AuthorizationGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: PermissionsGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -1,6 +1,6 @@
-import { envSchema } from '../../lib/zod/env.schema';
 import { Logger } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { envSchema } from '../../lib/zod/env.schema';
 
 export const validateEnv = () => {
   const env = envSchema.safeParse(process.env);

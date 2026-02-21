@@ -3,7 +3,7 @@ import { z } from 'zod';
 // schemas
 export const LoginTokenPayloadSchema = z.object({ id: z.string() });
 export const RefreshTokenPayloadSchema = z.object({
-  email: z.string().email(),
+  id: z.string(),
 });
 
 // types

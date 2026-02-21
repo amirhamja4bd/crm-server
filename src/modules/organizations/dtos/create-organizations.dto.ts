@@ -66,7 +66,10 @@ export class CreateOrganizationDto {
   @MaxLength(10)
   currency?: string;
 
-  @ApiProperty({ example: 'uuid', description: 'Subscription plan id' })
+  @ApiProperty({
+    example: '550e8400-e29b-41d4-a716-446655440000',
+    description: 'Subscription plan id (UUID from subscription_plans table)',
+  })
   @IsUUID()
   subscriptionPlanId!: string;
 

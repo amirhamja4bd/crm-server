@@ -1,6 +1,6 @@
 import { IBaseEntity } from '@/shared/types/types';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
 
 export class UpdateRoleDto implements IBaseEntity {
   @ApiPropertyOptional({ example: 'uuid', description: 'Unique identifier' })
@@ -12,6 +12,11 @@ export class UpdateRoleDto implements IBaseEntity {
   @IsString()
   @MaxLength(100)
   name?: string;
+
+  @ApiPropertyOptional({ example: false, description: 'Is super admin role' })
+  @IsOptional()
+  @IsBoolean()
+  isSuperAdmin?: boolean;
 
   @ApiPropertyOptional({ example: false, description: 'Soft delete flag' })
   @IsOptional()

@@ -36,6 +36,34 @@
       "when": 1771630353334,
       "tag": "0004_superb_moonstone",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1771667568301,
+      "tag": "0005_romantic_mongoose",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1771670000000,
+      "tag": "0006_permissions_global",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1771673446711,
+      "tag": "0007_broad_azazel",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1771686892592,
+      "tag": "0008_colossal_loners",
+      "breakpoints": true
     }
   ]
 }

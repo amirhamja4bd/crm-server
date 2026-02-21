@@ -7,7 +7,9 @@ import { Organization_feature_flagsService } from '../services/organization_feat
 @ApiTags('organization_feature_flags')
 @Controller('organization_feature_flags')
 export class Organization_feature_flagsController {
-  constructor(private readonly organization_feature_flagsService: Organization_feature_flagsService) {}
+  constructor(
+    private readonly organization_feature_flagsService: Organization_feature_flagsService,
+  ) {}
 
   @Post()
   async create(@Body() payload: CreateOrganization_feature_flagDto) {

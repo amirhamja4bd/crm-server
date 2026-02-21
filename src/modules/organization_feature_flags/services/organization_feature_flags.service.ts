@@ -11,7 +11,9 @@ export class Organization_feature_flagsService extends BaseService<
   CreateOrganization_feature_flagDto,
   UpdateOrganization_feature_flagDto
 > {
-  constructor(private readonly organization_feature_flagsRepository: Organization_feature_flagsRepository) {
+  constructor(
+    private readonly organization_feature_flagsRepository: Organization_feature_flagsRepository,
+  ) {
     super(organization_feature_flagsRepository);
   }
 }

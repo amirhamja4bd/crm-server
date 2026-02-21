@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString, MaxLength } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, IsUUID, MaxLength } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({ example: 'John Doe', description: 'Full name' })
@@ -26,6 +26,23 @@ export class CreateUserDto {
   @IsString()
   @MaxLength(255)
   password!: string;
+
+  @ApiPropertyOptional({
+    example: '550e8400-e29b-41d4-a716-446655440000',
+    description: 'Organization UUID (provide organizationId OR organizationName)',
+  })
+  @IsOptional()
+  @IsUUID()
+  organizationId?: string;
+
+  @ApiPropertyOptional({
+    example: 'Acme Inc',
+    description: 'Organization name (use if org does not exist; creates org with trial plan)',
+  })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  organizationName?: string;
 
   @ApiPropertyOptional({ example: 'https://avatar.url', description: 'Avatar URL' })
   @IsOptional()

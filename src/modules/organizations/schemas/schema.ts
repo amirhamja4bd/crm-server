@@ -1,5 +1,4 @@
 import { SUBSCRIPTION_PLAN_STATUS_ENUM } from '@/enum/subscription-plan-status.enum';
-import { subscription_plans } from '../../subscription_plans/schemas/schema';
 import {
   boolean,
   index,
@@ -10,8 +9,7 @@ import {
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-
-import { commonSchemaFieldsWithId } from 'src/shared/common-schemas/common-schema';
+import { subscription_plans } from '../../subscription_plans/schemas/schema';
 
 const subscriptionPlanStatusEnum = pgEnum(
   'subscription_plan_status',
@@ -21,7 +19,11 @@ const subscriptionPlanStatusEnum = pgEnum(
 export const organizations = pgTable(
   'organizations',
   {
-    ...commonSchemaFieldsWithId,
+    id: uuid('id').primaryKey().defaultRandom(),
+    isDeleted: boolean('is_deleted').notNull().default(false),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
+    isOrganizationOwner: boolean('is_organization_owner').notNull().default(false),
     name: varchar('name', { length: 255 }).notNull().default(''),
     email: varchar('email', { length: 255 }).notNull().unique(),
     phone: varchar('phone', { length: 50 }).notNull().unique(),

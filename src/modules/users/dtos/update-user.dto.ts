@@ -57,6 +57,11 @@ export class UpdateUserDto implements IBaseEntity {
   @IsBoolean()
   isActive?: boolean;
 
+  @ApiPropertyOptional({ example: 'refresh_token_string', description: 'Refresh token' })
+  @IsOptional()
+  @IsString()
+  refreshToken?: string;
+
   @ApiPropertyOptional({ example: false, description: 'Soft delete flag' })
   @IsOptional()
   isDeleted?: boolean;

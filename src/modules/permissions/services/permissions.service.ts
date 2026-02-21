@@ -14,4 +14,16 @@ export class PermissionsService extends BaseService<
   constructor(private readonly permissionsRepository: PermissionsRepository) {
     super(permissionsRepository);
   }
+
+  async findByResource(resource: string) {
+    return await this.permissionsRepository.findByResource(resource);
+  }
+
+  async findAllGroupedByResource() {
+    return await this.permissionsRepository.findAllGroupedByResource();
+  }
+
+  async seedFromEnum() {
+    return await this.permissionsRepository.seedFromEnum();
+  }
 }

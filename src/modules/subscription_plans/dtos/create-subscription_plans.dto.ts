@@ -1,7 +1,23 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsNumber, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNumber,
+  IsOptional,
+  IsString,
+  IsUUID,
+  MaxLength,
+} from 'class-validator';
 
 export class CreateSubscription_planDto {
+  @ApiPropertyOptional({
+    example: '550e8400-e29b-41d4-a716-446655440000',
+    description: 'Organization id (omit for global plans)',
+  })
+  @IsOptional()
+  @IsUUID()
+  organizationId?: string;
+
   @ApiProperty({ example: 'Pro Plan', description: 'Plan name' })
   @IsString()
   @MaxLength(255)

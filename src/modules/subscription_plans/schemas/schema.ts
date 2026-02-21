@@ -6,14 +6,17 @@ import {
   pgTable,
   real,
   timestamp,
+  uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { commonSchemaFieldsWithId } from 'src/shared/common-schemas/common-schema';
 
 export const subscription_plans = pgTable(
   'subscription_plans',
   {
-    ...commonSchemaFieldsWithId,
+    id: uuid('id').primaryKey().defaultRandom(),
+    isDeleted: boolean('is_deleted').notNull().default(false),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    updatedAt: timestamp('updated_at').notNull().defaultNow(),
     name: varchar('name', { length: 255 }).notNull().unique(),
     description: varchar('description', { length: 1000 }).notNull().default(''),
     price: real('price').notNull().default(0),

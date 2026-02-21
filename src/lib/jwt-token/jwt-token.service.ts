@@ -16,14 +16,18 @@ export class JwtTokenService {
    * @param payload - The payload to encode in the token
    * @returns The generated JWT token
    */
-  async loginToken(payload: LoginTokenPayload): Promise<string> {
-    // get the config
-    const secret = await this.configService.get('JWT_SECRET');
-    const expiresIn = await this.configService.get('JWT_EXPIRES_IN');
-    const algorithm = await this.configService.get('JWT_ALGORITHM');
+  loginToken(payload: LoginTokenPayload): string {
+    const secret = this.configService.get('JWT_SECRET', { infer: true });
+    const expiresIn = this.configService.get('JWT_EXPIRES_IN', { infer: true });
 
-    // sign the token
-    const token = this.jwtService.sign(payload, { secret, expiresIn, algorithm });
+    if (!secret) {
+      throw new Error('JWT_SECRET is not configured');
+    }
+
+    const token = this.jwtService.sign(payload, {
+      secret,
+      ...(expiresIn && { expiresIn }),
+    } as any);
     return token;
   }
 
@@ -34,7 +38,7 @@ export class JwtTokenService {
    */
   async verifyLoginToken<T extends object>(token: string): Promise<T> {
     try {
-      const secret = this.configService.get('JWT_SECRET');
+      const secret = this.configService.get('JWT_SECRET', { infer: true });
       const payload = await this.jwtService.verifyAsync<T>(token, { secret });
       return payload;
     } catch (error) {
@@ -48,13 +52,19 @@ export class JwtTokenService {
    * @param email - The email of the user
    * @returns The generated refresh token
    */
-  async generateRefreshToken(email: string) {
-    const secret = await this.configService.get('REFRESH_SECRET');
-    const expiresIn = await this.configService.get('REFRESH_EXPIRES_IN');
-    const algorithm = await this.configService.get('JWT_ALGORITHM');
+  generateRefreshToken(userId: string): string {
+    const secret = this.configService.get('REFRESH_SECRET', { infer: true });
+    const expiresIn = this.configService.get('REFRESH_EXPIRES_IN', { infer: true });
 
-    const payload: RefreshTokenPayload = { email };
-    return this.jwtService.sign(payload, { secret, expiresIn, algorithm });
+    if (!secret) {
+      throw new Error('REFRESH_SECRET is not configured');
+    }
+
+    const payload: RefreshTokenPayload = { id: userId };
+    return this.jwtService.sign(payload, {
+      secret,
+      ...(expiresIn && { expiresIn }),
+    } as any);
   }
 
   /**
@@ -64,7 +74,7 @@ export class JwtTokenService {
    */
   async verifyRefreshToken(token: string) {
     try {
-      const secret = await this.configService.get('REFRESH_SECRET');
+      const secret = this.configService.get('REFRESH_SECRET', { infer: true });
       const payload = await this.jwtService.verifyAsync<RefreshTokenPayload>(token, { secret });
       return payload;
     } catch (error) {
